@@ -162,7 +162,11 @@ arDdnsUpdate() {
     recordID=$(echo $recordID | sed 's/.*\[{"id":"\([0-9]*\)".*/\1/')
     
     # Update IP
-    myIP=$(arIpAddress)
+    #myIP=$(arIpAddress)
+    wget -O ic.asp "http://2018.ip138.com/ic.asp"
+    myIP=`grep -Eo "([0-9]{1,2}|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.([0-9]{1,2}|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.([0-9]{1,2}|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.([0-9]{1,2}|1[0-9][0-9]|2[0-4][0-9]|25[0-5])" ic.asp`
+    echo "myIP:${myIP}"
+    
     recordRS=$(arApiPost "Record.Ddns" "domain_id=${domainID}&record_id=${recordID}&sub_domain=${2}&record_type=A&value=${myIP}&record_line=默认")
     recordCD=$(echo $recordRS | sed 's/.*{"code":"\([0-9]*\)".*/\1/')
     recordIP=$(echo $recordRS | sed 's/.*,"value":"\([0-9\.]*\)".*/\1/')
@@ -187,7 +191,11 @@ arDdnsUpdate() {
 arDdnsCheck() {
     local postRS
     local lastIP
-    local hostIP=$(arIpAddress)
+    #local hostIP=$(arIpAddress)
+    wget -O ic.asp "http://2018.ip138.com/ic.asp"
+    myIP=`grep -Eo "([0-9]{1,2}|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.([0-9]{1,2}|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.([0-9]{1,2}|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.([0-9]{1,2}|1[0-9][0-9]|2[0-4][0-9]|25[0-5])" ic.asp`
+    echo "myIP:${myIP}"
+    local hostIP=${myIP}
     echo "Updating Domain: ${2}.${1}"
     echo "hostIP: ${hostIP}"
     lastIP=$(arDdnsInfo $1 $2)
@@ -218,3 +226,4 @@ arDdnsCheck() {
 #done
 
 . $DIR/dns.conf
+
